@@ -16,10 +16,12 @@ def array_to_tensor(array):
 
 
 
-def show_images(tensor, nb_img=6):
+def show_images(tensor, Ytr=None, nb_img=6):
     plt.figure(figsize=(20, 20*nb_img), tight_layout=True)
     for i in range(nb_img):
         plt.subplot(1,nb_img,i+1)
         img = tensor[i]
         plt.imshow((img - img.min()) / (img.max() - img.min()))
+        if Ytr is not None:
+            plt.title(f"Image of class {Ytr[i]}")
     plt.show()
