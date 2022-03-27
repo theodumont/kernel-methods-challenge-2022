@@ -17,7 +17,7 @@ def save_Yte(Yte, model_name):
     """Save Yte predictions and append 'model_name' to file name."""
     dataframe = pd.DataFrame({'Prediction' : Yte})
     dataframe.index += 1
-    dataframe.to_csv(f'Yte_pred_{model_name}.csv',index_label='Id')
+    dataframe.to_csv(f'./data/Yte_pred_{model_name}.csv',index_label='Id')
 
 
 # DISPLAY ====================================
