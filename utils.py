@@ -78,18 +78,3 @@ def accuracy(gt, pr):
     """Return proportion of well predicted samples."""
     return (gt == pr).mean()
 
-
-def get_sweep_id(parameters):
-    """https://docs.wandb.ai/guides/sweeps/configuration"""
-    sweep_config = {
-        # ne pas toucher
-        'method': "bayes",
-        'metric': {
-          'name': 'accuracy',
-          'goal': 'maximize'
-        },
-        'parameters': parameters
-    }
-    sweep_id = wandb.sweep(sweep_config, project='kernel-challenge')
-
-    return sweep_id
