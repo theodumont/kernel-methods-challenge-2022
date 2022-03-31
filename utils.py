@@ -2,7 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import wandb
 
 # FILES ====================================
 
@@ -48,6 +48,48 @@ def array_to_tensor(array):
     tensor = np.stack(tensor, axis=3)
     return tensor
 
+def tensor_to_array(tensor):
+    """Transform the 5000 x 32 x 32 x 3 dataset into 5000 x 3072."""
+    N = tensor.shape[0]
+    array = []
+    for i in range(3):
+        array.append(tensor[:,:,:,i].reshape((N, -1)))
+    array = np.concatenate(array, axis=1)
+    return array
+
+from torchvision import transforms
+import torch
+def augment_dataset(array, y, transform=None):
+    if transform is None: return array
+    transform = transforms.Compose(transform)
+    # reshape
+    tensor = array_to_tensor(array)
+    # put in torch to apply transforms
+    tensor = torch.tensor(tensor)
+    tensor_augm = transform(tensor)
+    tensor_augm = np.array(tensor_augm)
+    array_augm = tensor_to_array(tensor_augm)
+
+    return np.concatenate([array, array_augm], axis=0), np.concatenate([y, y], axis=0)
+
+
+
 def accuracy(gt, pr):
     """Return proportion of well predicted samples."""
     return (gt == pr).mean()
+
+
+def get_sweep_id(parameters):
+    """https://docs.wandb.ai/guides/sweeps/configuration"""
+    sweep_config = {
+        # ne pas toucher
+        'method': "bayes",
+        'metric': {
+          'name': 'accuracy',
+          'goal': 'maximize'
+        },
+        'parameters': parameters
+    }
+    sweep_id = wandb.sweep(sweep_config, project='kernel-challenge')
+
+    return sweep_id
