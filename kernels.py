@@ -131,7 +131,6 @@ class GHIKernel:
     def kernel(self,X,Y):
         (n_x, m_x) = np.shape(X)
         (n_y, m_y) = np.shape(Y)
-        print(n_x,m_x,n_y,m_y)
         if m_x != m_y: raise TypeError('Check input dimensions')
         K = np.zeros((n_x,n_y))
         for i in range(n_x):
