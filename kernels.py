@@ -129,11 +129,10 @@ class GHIKernel:
     def __init__(self, beta=1.):
         self.beta = beta
     def kernel(self,X,Y):
-        (n_x, m_x) = np.shape(X)
-        (n_y, m_y) = np.shape(Y)
-        if m_x != m_y: raise TypeError('Check input dimensions')
-        K = np.zeros((n_x,n_y))
-        for i in range(n_x):
-            for j in range(n_y):
-                K[i,j] = np.minimum(np.power(np.abs(X[i,:]), self.beta), np.power(np.abs(Y[j,:]), self.beta)).sum()
+        K = np.zeros((X.shape[0], Y.shape[0]))
+        for d in range(X.shape[1]):
+            K += np.minimum(
+                np.power(np.abs(X[:, d].reshape(-1, 1)), self.beta),
+                np.power(np.abs(Y[:, d].reshape(-1, 1)), self.beta).T
+            )
         return K
