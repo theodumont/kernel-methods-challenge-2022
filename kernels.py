@@ -122,11 +122,19 @@ class LogKernel:
 class GHIKernel:
     """Generalized Histogram Intersection kernel.
 
-        K(x, y) = - sum_i min(|x_i|^beta,|y_i|^beta|)
+        K(x, y) = sum_i min(|x_i|^beta,|y_i|^beta|)
 
     http://perso.lcpc.fr/tarel.jean-philippe/publis/jpt-icip05.pdf
     """
     def __init__(self, beta=1.):
         self.beta = beta
     def kernel(self,X,Y):
-        return np.minimum(np.power(np.abs(X), self.beta), np.power(np.abs(Y), self.beta)).sum()
+        (n_x, m_x) = np.shape(X)
+        (n_y, m_y) = np.shape(Y)
+        print(n_x,m_x,n_y,m_y)
+        if m_x != m_y: raise TypeError('Check input dimensions')
+        K = np.zeros((n_x,n_y))
+        for i in range(n_x):
+            for j in range(n_y):
+                K[i,j] = np.minimum(np.power(np.abs(X[i,:]), self.beta), np.power(np.abs(Y[j,:]), self.beta)).sum()
+        return K
