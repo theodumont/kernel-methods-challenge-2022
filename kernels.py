@@ -98,3 +98,39 @@ class Chi2Kernel:
             kernel += (column_1 - column_2.T)**2 / (column_1 + column_2.T)
 
         return np.exp(-self._gamma * kernel)
+
+class WaveletKernel:
+    """http://see.xidian.edu.cn/faculty/zhangli/publications/WSVM.pdf"""
+    def __init__(self, a=1):
+        self.a = a
+        self.h = lambda t: np.cos(1.75*t) * np.exp(-t**2/2)
+    def kernel(self,X,Y):
+        return np.prod(self.h((X-Y)/self.a))
+
+class LogKernel:
+    """Log kernel using torch for faster computation.
+
+        K(x, y) = - log(1+||x-y||^d)
+    """
+    def __init__(self, d=1):
+        self.d = d
+    def kernel(self,X,Y):
+        X_ = torch.tensor(X)
+        Y_ = torch.tensor(Y)
+        return np.array(- torch.log(1 + torch.cdist(X_,Y_)**self.d))
+
+class GHIKernel:
+    """Generalized Histogram Intersection kernel.
+
+        K(x, y) = - sum_i min(|x_i|^beta,|y_i|^beta|)
+
+    http://perso.lcpc.fr/tarel.jean-philippe/publis/jpt-icip05.pdf
+    """
+    def __init__(self, beta=1.):
+        self.beta = beta
+    def kernel(self,X,Y):
+        K = np.zeros((X.shape[0], Y.shape[0]))
+        for i in range(X.shape[0]):
+            for j in range(Y.shape[0]):
+                K[i,j] = np.minimum(np.power(np.abs(X[i]), self.beta), np.power(np.abs(Y[j]), self.beta)).sum()
+        return K
