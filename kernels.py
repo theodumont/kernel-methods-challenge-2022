@@ -129,8 +129,4 @@ class GHIKernel:
     def __init__(self, beta=1.):
         self.beta = beta
     def kernel(self,X,Y):
-        K = np.zeros((X.shape[0], Y.shape[0]))
-        for i in range(X.shape[0]):
-            for j in range(Y.shape[0]):
-                K[i,j] = np.minimum(np.power(np.abs(X[i]), self.beta), np.power(np.abs(Y[j]), self.beta)).sum()
-        return K
+        return np.minimum(np.power(np.abs(X), self.beta), np.power(np.abs(Y), self.beta)).sum()
