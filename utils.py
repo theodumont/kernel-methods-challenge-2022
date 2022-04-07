@@ -2,9 +2,12 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import wandb
+import torch
+from torchvision import transforms
+from tqdm import tqdm
 
-# FILES ====================================
+
+# FILES ==================================================================================
 
 def get_data(data_path="./data"):
     """Return data files."""
@@ -17,10 +20,10 @@ def save_Yte(Yte, model_name):
     """Save Yte predictions and append 'model_name' to file name."""
     dataframe = pd.DataFrame({'Prediction' : Yte})
     dataframe.index += 1
-    dataframe.to_csv(f'./data/Yte_pred_{model_name}.csv',index_label='Id')
+    dataframe.to_csv(f'./data/preds/Yte_pred_{model_name}.csv',index_label='Id')
 
 
-# DISPLAY ====================================
+# DISPLAY ================================================================================
 
 def show_images(tensor, Ytr=None, nb_img=6):
     """Display nb_img images with their class."""
@@ -34,7 +37,7 @@ def show_images(tensor, Ytr=None, nb_img=6):
     plt.show()
 
 
-# RANDOM ====================================
+# TENSORS ================================================================================
 
 def array_to_tensor(array):
     """Transform the 5000 x 3072 dataset into 5000 x 32 x 32 x 3."""
@@ -57,24 +60,23 @@ def tensor_to_array(tensor):
     array = np.concatenate(array, axis=1)
     return array
 
-from torchvision import transforms
-import torch
-def augment_dataset(array, y, transform=None):
+
+# CHALLENGE ==============================================================================
+
+def augment_dataset(array, y, repeat=8, transform=None):
+    """Perform data augmentation on the dataset. Results in the concatenation of the
+    original dataset and `repeat` augmented datasets."""
     if transform is None: return array
     transform = transforms.Compose(transform)
     # reshape
-    tensor = array_to_tensor(array)
+    tensor = array_to_tensor(np.repeat(array, repeat, axis=0))
     # put in torch to apply transforms
-    tensor = torch.tensor(tensor)
-    tensor_augm = transform(tensor)
-    tensor_augm = np.array(tensor_augm)
+    tensor = torch.tensor(tensor).permute(0, 3, 1, 2)
+    tensor_augm = torch.tensor(np.stack([np.array(transform(img)) for img in tqdm(tensor, desc="Augmenting")], axis=0))
+    tensor_augm = np.array(tensor_augm.permute(0, 2, 3, 1))
     array_augm = tensor_to_array(tensor_augm)
-
-    return np.concatenate([array, array_augm], axis=0), np.concatenate([y, y], axis=0)
-
-
+    return np.concatenate([array, array_augm], axis=0), np.concatenate([y, np.repeat(y, repeat, axis=0)], axis=0)
 
 def accuracy(gt, pr):
     """Return proportion of well predicted samples."""
     return (gt == pr).mean()
-
