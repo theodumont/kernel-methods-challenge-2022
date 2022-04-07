@@ -5,9 +5,9 @@
 """
 import numpy as np
 from tqdm import tqdm
+from scipy import optimize
 from scipy.linalg import eigh
 from tqdm import tqdm
-from scipy import optimize
 
 # KRR ====================================================================================
 

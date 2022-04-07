@@ -1,16 +1,8 @@
 import numpy as np
 
+
 def gradient(image):
-    """Compute gradient of image while preserving the shape.
-
-    Parameters
-    ----------
-    image : image from which to compute the gradient.
-
-    Returns
-    -------
-    grad_x, grad_y : gradients along the horizontal and vertical axis.
-    """
+    """Compute gradient of image while preserving the shape."""
     grad_y = np.zeros_like(image)
     grad_x = np.zeros_like(image)
     # borders
@@ -24,16 +16,8 @@ def gradient(image):
     return grad_x, grad_y
 
 def select_biggest_magnitude(grad_x, grad_y):
-    """For an 3-channel image, return the gradients that have the biggest magnitude along the channel axis.
-
-    Parameters
-    ----------
-    grad_x, grad_y : original gradients, of size (Y, X, 3).
-
-    Returns
-    -------
-    grad_x, grad_y : selected gradients, of size (Y, X).
-    """
+    """For an 3-channel image, return the gradients that have the biggest magnitude along
+    the channel axis."""
     magnitude = grad_magnitude(grad_x, grad_y)
     max_magnitude_idx = magnitude.argmax(axis=2)
     yy, xx = np.meshgrid(np.arange(grad_x.shape[0]), np.arange(grad_x.shape[1]), indexing='ij', sparse=True)
@@ -43,6 +27,7 @@ def select_biggest_magnitude(grad_x, grad_y):
 def grad_magnitude(grad_x, grad_y):
     """Return magnitude of the gradients."""
     return np.sqrt(grad_x ** 2 + grad_y ** 2)
+
 def grad_orientation(grad_x, grad_y, eps=1e-8):
     """Return orientation of the gradients."""
     return np.rad2deg(np.arctan(grad_y/(grad_x+eps))) % 180
@@ -88,6 +73,7 @@ def normalize_block(block, method, eps=1e-5):
     return out
 
 def hog(image, orientations=9, pix_per_cell=8, cells_per_block=3, normalization='L2-Hys'):
+    """Perform HOG (Histograms Of Gradients) on an image."""
 
     ### 1. compute the gradients of the image ============================================
     grad_x, grad_y = gradient(image)                           # compute gradients
