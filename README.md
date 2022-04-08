@@ -1,4 +1,4 @@
-# kernel-methods-challenge
+# kernel-methods-challenge-2022
 
 This repository contains the code of our models for the [2022 Kernel Methods for Machine Learning Data Challenge](https://www.kaggle.com/c/mva-mash-kernel-methods-2021-2022). The goal of this year's challenge was to obtain the best accuracy on an image classification task using solely kernel-based models.
 
