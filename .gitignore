@@ -1,0 +1,7 @@
+__pycache__/
+# data
+data/Xte.csv
+data/Xtr.csv
+data/Ytr.csv
+# experiments
+wandb/
