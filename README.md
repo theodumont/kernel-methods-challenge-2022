@@ -1,13 +1,15 @@
 # kernel-methods-challenge-2022
 
+- **Team:** Caramel Methods
+- **Team members:** Théophile Bousquet, Théo Dumont (MVA 2021-2022)
+
 This repository contains the code of our models for the [2022 Kernel Methods for Machine Learning Data Challenge](https://www.kaggle.com/c/mva-mash-kernel-methods-2021-2022). The goal of this year's challenge was to obtain the best accuracy on an image classification task using solely kernel-based models.
 
-We obtained an accuracy of 59.5% using a Kernel Ridge Regression (KRR) with a log kernel, trained on the Histograms Of Oriented Gradients (HOG) of the input images, with a bit of data augmentation.
-
+We obtained an accuracy of 59.5% using a Kernel Ridge Regression (KRR) with a log kernel, trained on the Histograms of Oriented Gradients (HOG) of the input images, with a bit of data augmentation.
 
 | Feature extraction | Data augm. | Model                   | Kernel     | Public score | Private score |
-| ------------------ | ----------------- | ----------------------- | ---------- |:------------:|:-------------:|
-| HOG                | Yes               | Kernel Ridge Regression | Log kernel |   57.7%      |   **59.5%**   |
+| ------------------ | ---------- | ----------------------- | ---------- |:------------:|:-------------:|
+| HOG                | Yes        | Kernel Ridge Regression | Log kernel |   57.7%      |   **59.5%**   |
 
 ## Installation and usage
 In order to reproduce our results, you can:
@@ -23,7 +25,7 @@ In order to reproduce our results, you can:
     ```bash
     python3 main.py
     ```
-    The error score may be different from the one submitted on challenge due to the randomness of the data augmentation process.
+    This will create a file `Yte_pred.csv` in the `data/preds/` directory. The error score may be a little different from the one submitted on challenge due to the randomness of the data augmentation process.
 - in order to have some insights on the command-line parameters of the `main.py` script, you can use
     ```bash
     python3 main.py ---help
