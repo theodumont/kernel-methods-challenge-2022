@@ -1,3 +1,4 @@
+"""Some utility functions."""
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,11 +17,11 @@ def get_data(data_path="./data"):
     Ytr = np.array(pd.read_csv(os.path.join(data_path, 'Ytr.csv'),sep=',',usecols=[1])).squeeze().astype(np.int32)
     return Xtr, Xte, Ytr
 
-def save_Yte(Yte, model_name):
+def save_Yte(Yte, model_name, pred_path="./data/preds"):
     """Save Yte predictions and append 'model_name' to file name."""
     dataframe = pd.DataFrame({'Prediction' : Yte})
     dataframe.index += 1
-    dataframe.to_csv(f'./data/preds/Yte_pred_{model_name}.csv',index_label='Id')
+    dataframe.to_csv(os.path.join(pred_path, f'Yte_pred{model_name}.csv'),index_label='Id')
 
 
 # DISPLAY ================================================================================
@@ -72,7 +73,7 @@ def augment_dataset(array, y, repeat=8, transform=None):
     tensor = array_to_tensor(np.repeat(array, repeat, axis=0))
     # put in torch to apply transforms
     tensor = torch.tensor(tensor).permute(0, 3, 1, 2)
-    tensor_augm = torch.tensor(np.stack([np.array(transform(img)) for img in tqdm(tensor, desc="Augmenting")], axis=0))
+    tensor_augm = torch.tensor(np.stack([np.array(transform(img)) for img in tqdm(tensor, desc="Augmenting data")], axis=0))
     tensor_augm = np.array(tensor_augm.permute(0, 2, 3, 1))
     array_augm = tensor_to_array(tensor_augm)
     return np.concatenate([array, array_augm], axis=0), np.concatenate([y, np.repeat(y, repeat, axis=0)], axis=0)

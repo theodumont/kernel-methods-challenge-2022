@@ -9,3 +9,10 @@
 | `Yte_pred_OneVsRestKRR_1` | OneVsRestKRR (`lambd=.001`) | Gaussian (`sigma=1`)  |            |   0.23300    |
 | `Yte_pred_OneVsRestKRR_2` | OneVsRestKRR (`lambd=.1`)   | Gaussian (`sigma=.5`) |            |   0.11500    |
 |                       | OneVsRestKSVC (`C=?`)       | Gaussian (`sigma=?`)  |            |              |
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+conda install pytorch torchvision -c pytorch
+```

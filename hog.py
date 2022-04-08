@@ -1,3 +1,4 @@
+"""Implement HOG (Histogram of Oriented Gradients) using numpy."""
 import numpy as np
 
 
@@ -55,22 +56,22 @@ def cell_histogram(magnitude, orientation, orient_min, orient_max):
                 total += magnitude[y,x]
     return total / (Y * X)
 
-def normalize_block(block, method, eps=1e-5):
+def normalize_block(block, norm_method, eps=1e-5):
     """Normalize a block."""
-    if method == 'L1':
-        out = block / (np.sum(np.abs(block)) + eps)
-    elif method == 'L1-sqrt':
-        out = np.sqrt(block / (np.sum(np.abs(block)) + eps))
-    elif method == 'L2':
-        out = block / np.sqrt(np.sum(block ** 2) + eps ** 2)
-    elif method == 'L2-Hys':
-        out = block / np.sqrt(np.sum(block ** 2) + eps ** 2)
-        out = np.minimum(out, 0.2)
-        out = out / np.sqrt(np.sum(out ** 2) + eps ** 2)
+    if norm_method == 'L1':
+        norm = block / (np.sum(np.abs(block)) + eps)
+    elif norm_method == 'L1-sqrt':
+        norm = np.sqrt(block / (np.sum(np.abs(block)) + eps))
+    elif norm_method == 'L2':
+        norm = block / np.sqrt(np.sum(block ** 2) + eps ** 2)
+    elif norm_method == 'L2-Hys':
+        norm = block / np.sqrt(np.sum(block ** 2) + eps ** 2)
+        norm = np.minimum(norm, 0.2)
+        norm = norm / np.sqrt(np.sum(norm ** 2) + eps ** 2)
     else:
-        raise ValueError('Selected block normalization method is invalid.')
+        raise ValueError('Block normalization method invalid.')
 
-    return out
+    return norm
 
 def hog(image, orientations=9, pix_per_cell=8, cells_per_block=3, normalization='L2-Hys'):
     """Perform HOG (Histograms Of Gradients) on an image."""
@@ -109,7 +110,7 @@ def hog(image, orientations=9, pix_per_cell=8, cells_per_block=3, normalization=
                 bloc_y:bloc_y+cells_per_block,
                 bloc_x:bloc_x+cells_per_block,
                 :]
-            normalized_blocks[bloc_y,bloc_x,:] = normalize_block(block, method=normalization)
+            normalized_blocks[bloc_y,bloc_x,:] = normalize_block(block, norm_method=normalization)
 
     ### 4. flatten the feature vector ====================================================
     return normalized_blocks.ravel()

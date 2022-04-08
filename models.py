@@ -9,6 +9,7 @@ from scipy import optimize
 from scipy.linalg import eigh
 from tqdm import tqdm
 
+
 # KRR ====================================================================================
 
 class KRR:
@@ -38,13 +39,14 @@ class OneVsRestKRR:
     def __init__(self, kernel, lambd=1e-3, verbose=False):
         self.kernel = kernel
         self.lambd = lambd
+        print(self.lambd)
         self.verbose = verbose
         self.KRR_list = [KRR(self.kernel, class_id, self.lambd, self.verbose) for class_id in range(10)]
 
     def fit(self, X, y):
         self.X = X
         K = self.kernel(X,X)
-        for krr in tqdm(self.KRR_list, desc="Fitting"):
+        for krr in tqdm(self.KRR_list, desc="Fitting model"):
             krr.fit(y, K)
 
     def predict(self, x):
@@ -123,7 +125,7 @@ class OneVsRestKSVC:
     def fit(self, X, y):
         self.X = X
         K = self.kernel(X,X)
-        for ksvc in tqdm(self.KSVC_list, desc="Fitting"):
+        for ksvc in tqdm(self.KSVC_list, desc="Fitting model"):
             ksvc.fit(X, y, K)
 
     def predict(self, x):
