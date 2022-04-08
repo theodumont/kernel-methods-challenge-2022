@@ -31,11 +31,11 @@ In order to reproduce our results, you can:
 
 ## Repository structure
 - `main.py`: main script for reproducing results
-- source code
+- `src/`: source code
     - `models.py`: code for classifiers (KRR, KSVC) and KPCA
     - `kernels.py`: implemented kernels
     - `hog.py`: code for HOG
-    - `utils.py`
+    - `utils.py`: utility functions
 - notebooks
     - `data_exploration.ipynb`: data exploration (dataset, data augmentation)
-    - `hyperparameter_tuning.ipynb`
+    - `hyperparameter_tuning.ipynb`: running hyperparameter tuning functions
